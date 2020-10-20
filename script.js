@@ -69,7 +69,8 @@ function animate() {
 }
 
 let playerY = canvas.height - playerImage.height - 100;
-window.onload = animate();
+
+window.addEventListener('load', animate);
 
 window.addEventListener('keydown', () => {
     jump();
