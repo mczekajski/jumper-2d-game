@@ -7,6 +7,38 @@ const ctx = canvas.getContext('2d');
 let date = new Date();
 let lastAnimationUpdate = date.getTime();
 
+// LOAD IMAGES :
+
+const runImgs = [
+    new Image(),
+    new Image(),
+    new Image(),
+    new Image(),
+    new Image(),
+]
+runImgs[0].src = 'img/char/run/frame-1.png';
+runImgs[1].src = 'img/char/run/frame-2.png';
+runImgs[2].src = 'img/char/run/frame-3.png';
+runImgs[3].src = 'img/char/run/frame-4.png';
+runImgs[4].src = 'img/char/run/frame-5.png';
+
+const jumpImgs = [
+    new Image(),
+    new Image(),
+]
+jumpImgs[0].src = 'img/char/jump/jump-up.png';
+jumpImgs[1].src = 'img/char/jump/jump-fall.png';
+
+const standImgs = [
+    new Image(),
+    new Image(),
+]
+standImgs[0].src = 'img/char/standing/frame-1.png';
+standImgs[1].src = 'img/char/standing/frame-2.png';
+
+    
+
+
 // CLASSES:
 
 class Game {
@@ -37,10 +69,6 @@ class Game {
         }
     }
 
-    changeFrame() {
-        this.standingFrame == 1 ? this.standingFrame = 2 : this.standingFrame = 1;
-    }
-
     drawPlayerStanding() {
         console.log("Player is standing!");
         this.date = new Date();
@@ -52,7 +80,7 @@ class Game {
     drawPlayerRunning() {
         console.log("Player is running!");
         this.date = new Date();
-        if (this.frameCounter > 3) {
+        if (this.frameCounter > 4) {
             this.frameCounter = 0;
             if (this.frame < 5) {
                 this.frame++;
@@ -72,13 +100,13 @@ class Game {
     drawPlayerJumping() {
         console.log("Player is jumping!");
         player.currentJumpHeight += player.jumpSpeed;
-        player.jumpSpeed -= 2;
-        player.image.src = `img/char/jump/jump-up.png`;
+        player.jumpSpeed -= 1;
+        player.jumpSpeed > 0 ? player.image.src = 'img/char/jump/jump-up.png' : player.image.src = 'img/char/jump/jump-fall.png';
         ctx.drawImage(player.image, canvas.width/2 - player.image.width/2, canvas.height - player.image.height - 100 - player.currentJumpHeight);
-        if (player.currentJumpHeight < 0) {
+        if (player.currentJumpHeight <= 0) {
             player.jumpSpeed = 20;
             player.currentJumpHeight = 0;
-            player.activity = "stand";
+            player.activity = player.afterJumpActivity;
         }
     }
 }
@@ -91,15 +119,21 @@ class Player {
         this.image = new Image();
         this.image.src = 'img/char/standing/frame-1.png';
         this.currentJumpHeight = 0;
+        this.afterJumpActivity = "stand";
     }
 
     stand() {
-        this.activity = "stand";
+        if (this.activity != "jump") {
+            this.activity = "stand";           
+        }
     }
 
     run() {
-        this.frameCounter = 0;
-        this.activity = "run";
+        if (this.activity != "jump") {
+            this.frameCounter = 0;
+            this.activity = "run";
+        }
+
     }
 
     jump() {
@@ -123,11 +157,16 @@ function animate() {
 }
 
 window.addEventListener('keydown', e => {
-    if (e.keyCode === 32 && player.activity != "jump") player.jump();
-    if (e.keyCode === 39) player.run();
+    if (e.keyCode === 32 ) {
+        player.afterJumpActivity = player.activity;
+        player.jump();
+    }
+    if (e.keyCode === 39 ) player.run();
+    if (e.keyCode === 39 && player.activity === "jump") player.afterJumpActivity = "run"; 
 });
 window.addEventListener('keyup', e => {
-    if (e.keyCode === 39) player.stand();
+    if (e.keyCode === 39 ) player.stand();
+    if (e.keyCode === 39 && player.activity === "jump") player.afterJumpActivity = "stand"; 
 });
 
 window.addEventListener('load', animate);
