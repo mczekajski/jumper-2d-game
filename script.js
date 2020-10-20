@@ -1,77 +1,105 @@
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
-const playerImage = new Image();
-let date = new Date();
-let lastAnimationUpdate = date.getTime();
-playerImage.src = "img/char/run/frame-1.png";
-let counter = 1;
-let isJumping = 0;
-let jumpSpeed = 20;
+// GLOBAL:
 
+const canvas = document.querySelector('canvas');
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
+const ctx = canvas.getContext('2d');
+let date = new Date();
+let lastAnimationUpdate = date.getTime();
 
-function drawBottomLine() {
-    ctx.beginPath();
-    ctx.moveTo(0, canvas.height - 100);
-    ctx.lineTo(canvas.width, canvas.height - 100);
-    ctx.lineWidth = 5;
-    ctx.stroke();   
-}
+// CLASSES:
 
-function drawPlayerRunning() {
-    const changePicture = () => {
-        date = new Date();
-        playerImage.src = `img/char/run/frame-${counter}.png`;
-        if (date.getTime() - lastAnimationUpdate > 80) {
-            date = new Date();
-            lastAnimationUpdate = date.getTime();
-            counter < 5 ? counter++ : counter = 1;   
+class Game {
+    constructor() {
+        this.date = new Date();
+        this.standingFrame = 1;
+    }
+
+    drawBottomLine() {
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height - 100);
+        ctx.lineTo(canvas.width, canvas.height - 100);
+        ctx.lineWidth = 5;
+        ctx.stroke();
+    }
+
+    drawPlayer() {
+        switch (player.activity) {
+            case "run":
+                this.drawPlayerRunning();
+                break;
+            case "jump":
+                this.drawPlayerJumping();
+                break;
+            default: 
+                this.drawPlayerStanding();
         }
     }
-    ctx.drawImage(playerImage, canvas.width/2 - playerImage.width/2, playerY);
-    changePicture();
+
+    changeFrame() {
+        this.standingFrame == 1 ? this.standingFrame = 2 : this.standingFrame = 1;
+    }
+
+    drawPlayerStanding() {
+        // console.log("Player is standing!");
+        this.date = new Date();
+        console.log(this.date.getMilliseconds());
+        (this.date.getMilliseconds() > 500) == 0 ? this.standingFrame = 2 : this.standingFrame = 1;
+        player.image.src = `img/char/standing/frame-${this.standingFrame}.png`;
+        ctx.drawImage(player.image, 300, canvas.height - player.image.height - 100);
+    }
+
+    drawPlayerRunning() {
+        console.log("Player is running!");
+    }
+
+    drawPlayerJumping() {
+        console.log("Player is jumping!");
+        player.activity = "stand";
+    }
 }
 
-function jump() {
-    isJumping = 1;
+class Player {
+    constructor(activity, jumpSpeed, animationSpeed) {
+        this.activity = activity;
+        this.jumpSpeed = jumpSpeed;
+        this.animationSpeed = animationSpeed;
+        this.image = new Image();
+        this.image.src = 'img/char/standing/frame-1.png';
+    }
+
+    stand() {
+        this.activity = "stand";
+    }
+
+    run() {
+        this.activity = "run";
+    }
+
+    jump() {
+        this.activity = "jump";
+    }
+
 }
+
+// GAME:
+
+const game = new Game();
+const player = new Player("stand", 20, 80);
 
 function animate() {
+    requestAnimationFrame(animate);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    drawBottomLine();
-    drawPlayerRunning();
-    if (isJumping) {
-        if (jumpSpeed > 0) {
-            playerImage.src = `img/char/jump/jump-up.png`;
-            playerY -= jumpSpeed;
-            jumpSpeed -= 1; 
-            console.log(playerY);
-        }
-        else if (jumpSpeed <= 0) {
-            isJumping = 0; 
-        }
-    } 
-    else {
-        if (playerY < canvas.height - playerImage.height - 100) {
-            playerImage.src = `img/char/jump/jump-fall.png`;
-            playerY += jumpSpeed;
-            jumpSpeed += 1;
-            console.log(playerY);
-        } 
-        else {
-        playerY = canvas.height - playerImage.height - 100;
-        jumpSpeed = 20;
-        }
-    }
-    requestAnimationFrame(animate);
+    game.drawBottomLine();
+    game.drawPlayer();
 }
 
-let playerY = canvas.height - playerImage.height - 100;
-
 window.addEventListener('load', animate);
-
-window.addEventListener('keydown', () => {
-    jump();
+window.addEventListener('keydown', e => {
+    if (e.keyCode === 32) player.jump();
+    if (e.keyCode === 39) player.run();
+});
+window.addEventListener('keyup', e => {
+    if (e.keyCode === 39) player.stand();
 });
