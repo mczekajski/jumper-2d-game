@@ -8,7 +8,6 @@ let date = new Date();
 let lastAnimationUpdate = date.getTime();
 
 // LOAD IMAGES :
-
 const runImgs = [
     new Image(),
     new Image(),
@@ -36,11 +35,7 @@ const standImgs = [
 standImgs[0].src = 'img/char/standing/frame-1.png';
 standImgs[1].src = 'img/char/standing/frame-2.png';
 
-    
-
-
 // CLASSES:
-
 class Game {
     constructor() {
         this.date = new Date();
@@ -100,11 +95,11 @@ class Game {
     drawPlayerJumping() {
         console.log("Player is jumping!");
         player.currentJumpHeight += player.jumpSpeed;
-        player.jumpSpeed -= 1;
+        player.jumpSpeed -= 1.2;
         player.jumpSpeed > 0 ? player.image.src = 'img/char/jump/jump-up.png' : player.image.src = 'img/char/jump/jump-fall.png';
         ctx.drawImage(player.image, canvas.width/2 - player.image.width/2, canvas.height - player.image.height - 100 - player.currentJumpHeight);
-        if (player.currentJumpHeight <= 0) {
-            player.jumpSpeed = 20;
+        if (player.currentJumpHeight + player.jumpSpeed <= 0) {
+            player.jumpSpeed = 24;
             player.currentJumpHeight = 0;
             player.activity = player.afterJumpActivity;
         }
@@ -120,6 +115,19 @@ class Player {
         this.image.src = 'img/char/standing/frame-1.png';
         this.currentJumpHeight = 0;
         this.afterJumpActivity = "stand";
+
+        window.addEventListener('keydown', e => {
+            if (e.key === ' ' || e.key === 'Spacebar') {
+                if (this.activity != "jump") this.afterJumpActivity = this.activity;
+                this.jump();
+            }
+            if (e.key === 'ArrowRight' ) this.run();
+            if (e.key === 'ArrowRight' && this.activity === 'jump') this.afterJumpActivity = 'run'; 
+        });
+        window.addEventListener('keyup', e => {
+            if (e.key === 'ArrowRight' ) this.stand();
+            if (e.key === 'ArrowRight' && this.activity === 'jump') this.afterJumpActivity = 'stand'; 
+        });
     }
 
     stand() {
@@ -144,9 +152,8 @@ class Player {
 }
 
 // GAME:
-
 const game = new Game();
-const player = new Player("stand", 20, 80);
+const player = new Player("stand", 24, 80);
 
 function animate() {
     requestAnimationFrame(animate);
@@ -156,17 +163,5 @@ function animate() {
     game.drawPlayer();
 }
 
-window.addEventListener('keydown', e => {
-    if (e.keyCode === 32 ) {
-        player.afterJumpActivity = player.activity;
-        player.jump();
-    }
-    if (e.keyCode === 39 ) player.run();
-    if (e.keyCode === 39 && player.activity === "jump") player.afterJumpActivity = "run"; 
-});
-window.addEventListener('keyup', e => {
-    if (e.keyCode === 39 ) player.stand();
-    if (e.keyCode === 39 && player.activity === "jump") player.afterJumpActivity = "stand"; 
-});
-
+console.log(Date.now())
 window.addEventListener('load', animate);
