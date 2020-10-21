@@ -1,11 +1,14 @@
 // GLOBAL:
 
 const canvas = document.querySelector('canvas');
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
+canvas.height = 1080;
+canvas.width = 1920;
+canvas.style.maxHeight = window.innerHeight;
+canvas.style.maxWidth = 1920;
 const ctx = canvas.getContext('2d');
 
 // LOAD IMAGES :
+{
 const runImgs = [
     new Image(),
     new Image(),
@@ -58,10 +61,16 @@ fireBallImgs[1].src = 'img/objs/fireball/move/fireball_2.png';
 fireBallImgs[2].src = 'img/objs/fireball/move/fireball_3.png';
 fireBallImgs[3].src = 'img/objs/fireball/move/fireball_4.png';
 fireBallImgs[4].src = 'img/objs/fireball/move/fireball_5.png';
-
+}
 
 // CLASSES:
 class Game {
+    constructor() {
+        this.background = new Image();
+        this.background.src = 'img/bg.svg';
+        this.backgroundPosition = 0;
+    }
+
     drawBottomLine() {
         ctx.beginPath();
         ctx.moveTo(0, canvas.height - 50);
@@ -73,9 +82,6 @@ class Game {
     drawPlayer(player) {
         if (player.alive) {
             switch (player.activity) {
-                case "die":
-                    player.drawPlayerDying();
-                    break;
                 case "run":
                     player.drawPlayerRunning();
                     break;
@@ -94,6 +100,13 @@ class Game {
     drawFireBall(fireball) {
         fireball.drawFireBall();
     }
+    
+    drawBackground() {
+        this.backgroundPosition -= player.xAxisMovement;
+        if (this.backgroundPosition <= -canvas.width) this.backgroundPosition = 0;
+        ctx.drawImage(this.background, this.backgroundPosition, 0, canvas.width, canvas.height);
+        ctx.drawImage(this.background, this.backgroundPosition+canvas.width, 0, canvas.width, canvas.height);
+    }
 
 }
 
@@ -110,13 +123,14 @@ class Player {
         this.xPosition = canvas.width / 2 - this.image.width / 2;
         this.yPosition = canvas.height - this.image.height - 50;
         this.alive = true;
-
+        this.xAxisMovement = 0;
+        
         window.addEventListener('keydown', e => {
             if (e.key === ' ' || e.key === 'Spacebar') {
                 if (this.activity != "jump") this.afterJumpActivity = this.activity;
                 this.jump();
             }
-            if (e.key === 'ArrowRight') this.run();
+            if (e.key === 'ArrowRight' && this.alive) this.run();
             if (e.key === 'ArrowRight' && this.activity === 'jump') this.afterJumpActivity = 'run';
         });
         window.addEventListener('keyup', e => {
@@ -128,23 +142,27 @@ class Player {
     stand() {
         if (this.activity != "jump") {
             this.activity = "stand";
+            this.xAxisMovement = 0;
         }
     }
 
     run() {
         if (this.activity != "jump") {
             this.activity = "run";
+            this.xAxisMovement = 10;
         }
 
     }
 
     jump() {
         this.activity = "jump";
+        this.afterJumpActivity === "run" ? this.xAxisMovement = 10 : this.xAxisMovement = 0;
     }
 
     die() {
         this.frame = 1;
         this.activity = "die";
+        this.xAxisMovement = 0;
     }
 
     drawPlayerStanding() {
@@ -152,7 +170,7 @@ class Player {
         (Date.now() % 1000 > 500) ? this.frame = 2: this.frame = 1;
         this.image.src = `img/char/standing/frame-${this.frame}.png`;
         this.xPosition = canvas.width / 2 - this.image.width / 2;
-        this.yPosition = canvas.height - this.image.height - 50;
+        this.yPosition = canvas.height - this.image.height - canvas.height*0.17;
         ctx.drawImage(this.image, this.xPosition, this.yPosition);
     }
 
@@ -168,7 +186,7 @@ class Player {
         }
         this.image.src = `img/char/run/frame-${this.frame}.png`;
         this.xPosition = canvas.width / 2 - this.image.width / 2;
-        this.yPosition = canvas.height - this.image.height - 50;
+        this.yPosition = canvas.height - this.image.height - canvas.height*0.17;
         ctx.drawImage(this.image, this.xPosition, this.yPosition);
     }
 
@@ -182,10 +200,17 @@ class Player {
             player.jumpSpeed = 21;
             player.currentJumpHeight = 0;
             player.activity = player.afterJumpActivity;
+            if (player.activity === "run") {
+                player.run();
+                player.xAxisMovement = 10;
+            } 
+            else {
+                player.xAxisMovement = 0;
+            }
         }
         this.date = Date.now();
         this.xPosition = canvas.width / 2 - this.image.width / 2;
-        this.yPosition = canvas.height - this.image.height - 50 - player.currentJumpHeight;
+        this.yPosition = canvas.height - this.image.height - canvas.height*0.17 - player.currentJumpHeight;
         ctx.drawImage(player.image, this.xPosition, this.yPosition);
     }
 
@@ -193,12 +218,16 @@ class Player {
         if (Date.now() - this.date > 100) {
             if (this.frame < 5) {
                 this.frame++;
+                player.xAxisMovement = 5;
+            } 
+            else {
+                player.xAxisMovement = 0;
             }
             this.date = Date.now();
         }
         this.image.src = `img/char/faint/frame-${this.frame}.png`;
         this.xPosition = canvas.width / 2 - this.image.width / 2;
-        this.yPosition = canvas.height - this.image.height - 50;
+        this.yPosition = canvas.height - this.image.height - canvas.height*0.17;
         ctx.drawImage(this.image, this.xPosition, this.yPosition);
     }
 }
@@ -227,9 +256,11 @@ class FireBall {
             this.date = Date.now();
         }
         this.image.src = `img/objs/fireball/move/fireball_${this.frame}.png`;
-        this.xPosition -= this.speed;
-        //console.log(this.xPosition);
+        this.xPosition -= (this.speed + player.xAxisMovement);
+        
+        // Move fireball to the right side of a map
         this.xPosition < -1000 ? this.xPosition = canvas.width + 500 : this.xPosition = this.xPosition;
+
         ctx.drawImage(this.image, this.xPosition, this.yPosition, this.image.width * 1.2, this.image.height * 1.2);
     }
 }
@@ -237,13 +268,14 @@ class FireBall {
 // CREATE GAME OBJECTS AND CALL FUNCTIONS:
 const game = new Game();
 const player = new Player();
-let fireBall = new FireBall(10, canvas.width + 500, canvas.height - 220);
+let fireBall = new FireBall(10, canvas.width + 500, canvas.height * 0.65);
 
 function animate() {
     requestAnimationFrame(animate);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    game.drawBottomLine();
+    game.drawBackground();
+    //game.drawBottomLine();
     game.drawPlayer(player);
     game.drawFireBall(fireBall);
 
@@ -252,9 +284,11 @@ function animate() {
         fireBall.speed = 0;
         fireBall.xPosition = -500;
         player.die();
+        player.xAxisMovement = 0;
     }
     if (!player.alive) {
         player.activity = "die";
+        player.xAxisMovement = 0;
     }
 }
 
