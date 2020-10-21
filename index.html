@@ -1,25 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2D Game</title>
 </head>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            overflow:hidden;
-        }
-        canvas {
-            width: 100%;
-            height: auto;
-            background-color: #8833aa;
-        }
-    </style>
+<style>
+    * {
+        margin: 0;
+        padding: 0; 
+        overflow: hidden;
+    }
+    body {
+        height: 100vh;
+        background: linear-gradient(0deg, #775f3d 50%, #d2effd 50%);
+    }
+    div {
+        height: 100%;
+        margin: 0 auto;
+        padding: auto 0 auto 0;
+    } 
+    canvas {
+        width: 100%;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #d2effd;
+    }
+</style>
+
 <body>
-    <canvas></canvas>
-    
+    <div>
+        <canvas></canvas>
+    </div>
+
     <script src="script.js"></script>
 </body>
+
 </html>
