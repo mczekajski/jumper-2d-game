@@ -7,11 +7,9 @@ export default class Fireball {
     this.image.src = "img/objs/fireball/move/fireball_1.png";
     this.frame = 1;
     this.date = Date.now();
-
-    this.draw();
   }
 
-  draw() {
+  draw(ctx, gameWidth, playerXAxisMovement) {
     if (Date.now() - this.date > 80) {
       if (this.frame < 5) {
         this.frame++;
@@ -21,11 +19,11 @@ export default class Fireball {
       this.date = Date.now();
     }
     this.image.src = `img/objs/fireball/move/fireball_${this.frame}.png`;
-    this.xPosition -= this.speed + player.xAxisMovement;
+    this.xPosition -= this.speed + playerXAxisMovement;
 
     // Move fireball to the right side of a map
     this.xPosition < -1000
-      ? (this.xPosition = canvas.width + 500)
+      ? (this.xPosition = gameWidth + 500)
       : (this.xPosition = this.xPosition);
 
     ctx.drawImage(

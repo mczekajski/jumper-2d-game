@@ -1,1 +1,1 @@
-export function detectCollision() {}
+export function detectCollision(player, gameObject) {}

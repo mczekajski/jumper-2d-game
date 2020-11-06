@@ -11,6 +11,7 @@ export default class Game {
 
     this.player = new Player(this);
     this.background = new Background(this);
+    this.fireball = new Fireball(10, this.width + 500, this.height * 0.65);
 
     new InputHandler(this.player);
   }
@@ -20,62 +21,6 @@ export default class Game {
   draw() {
     this.background.draw(this.ctx, this.width, this.height);
     this.player.draw(this.ctx, this.width, this.height);
-  }
-
-  drawPlayer(player) {
-    if (player.alive) {
-      switch (player.activity) {
-        case "run":
-          player.drawPlayerRunning();
-          break;
-        case "jump":
-          player.drawPlayerJumping();
-          break;
-        default:
-          player.drawPlayerStanding();
-      }
-    } else {
-      player.drawPlayerDying();
-    }
-  }
-
-  drawFireBall(fireball) {
-    fireball.drawFireBall();
-  }
-
-  drawBackground() {
-    this.backgroundPosition -= player.xAxisMovement / 3;
-    if (this.backgroundPosition <= -canvas.width) this.backgroundPosition = 0;
-    ctx.drawImage(
-      this.background,
-      this.backgroundPosition,
-      0,
-      canvas.width,
-      canvas.height
-    );
-    ctx.drawImage(
-      this.background,
-      this.backgroundPosition + canvas.width - 1,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-    this.groundPosition -= player.xAxisMovement;
-    if (this.groundPosition <= -canvas.width) this.groundPosition = 0;
-    ctx.drawImage(
-      this.ground,
-      this.groundPosition,
-      canvas.height - this.ground.height,
-      canvas.width,
-      this.ground.height
-    );
-    ctx.drawImage(
-      this.ground,
-      this.groundPosition + this.ground.width - 1,
-      canvas.height - this.ground.height,
-      canvas.width,
-      this.ground.height
-    );
+    this.fireball.draw(this.ctx, this.width, this.player.xAxisMovement);
   }
 }
