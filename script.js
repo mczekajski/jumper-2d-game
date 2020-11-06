@@ -228,7 +228,6 @@ class FireBall {
   }
 
   drawFireBall() {
-    //console.log("Fireball!");
     if (Date.now() - this.date > 80) {
       if (this.frame < 5) {
         this.frame++;

@@ -1,0 +1,30 @@
+* {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body {
+    height: 100vh;
+    background: linear-gradient(0deg, #775f3d 50%, #d2effd 50%);
+}
+
+div {
+    height: 100%;
+    margin: 0 auto;
+    padding: auto 0 auto 0;
+}
+
+canvas {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #d2effd;
+}
+
+.load-imgs {
+    display: none;
+}

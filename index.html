@@ -4,65 +4,44 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jumper 2D Game</title>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-    body {
-      height: 100vh;
-      background: linear-gradient(0deg, #775f3d 50%, #d2effd 50%);
-    }
-    div {
-      height: 100%;
-      margin: 0 auto;
-      padding: auto 0 auto 0;
-    }
-    canvas {
-      width: 100%;
-      height: auto;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #d2effd;
-    }
-    img {
-      display: none;
-    }
-  </style>
 
   <body>
-    <img src="img/char/run/frame-1.png" alt="" />
-    <img src="img/char/run/frame-2.png" alt="" />
-    <img src="img/char/run/frame-3.png" alt="" />
-    <img src="img/char/run/frame-4.png" alt="" />
-    <img src="img/char/run/frame-5.png" alt="" />
+    <section class="load-imgs">
+      <img src="img/bg/bg.svg" alt="" />
+      <img src="img/bg/ground.png" alt="" />
+      <img src="img/bg/cloud.png" alt="" />
 
-    <img src="img/char/jump/jump-up.png" alt="" />
-    <img src="img/char/jump/jump-fall.png" alt="" />
+      <img src="img/char/run/frame-1.png" alt="" />
+      <img src="img/char/run/frame-2.png" alt="" />
+      <img src="img/char/run/frame-3.png" alt="" />
+      <img src="img/char/run/frame-4.png" alt="" />
+      <img src="img/char/run/frame-5.png" alt="" />
 
-    <img src="img/char/standing/frame-1.png" alt="" />
-    <img src="img/char/standing/frame-2.png" alt="" />
+      <img src="img/char/jump/jump-up.png" alt="" />
+      <img src="img/char/jump/jump-fall.png" alt="" />
 
-    <img src="img/char/faint/frame-1.png" alt="" />
-    <img src="img/char/faint/frame-2.png" alt="" />
-    <img src="img/char/faint/frame-3.png" alt="" />
-    <img src="img/char/faint/frame-4.png" alt="" />
-    <img src="img/char/faint/frame-5.png" alt="" />
+      <img src="img/char/standing/frame-1.png" alt="" />
+      <img src="img/char/standing/frame-2.png" alt="" />
 
-    <img src="img/objs/fireball/move/fireball_1.png" alt="" />
-    <img src="img/objs/fireball/move/fireball_2.png" alt="" />
-    <img src="img/objs/fireball/move/fireball_3.png" alt="" />
-    <img src="img/objs/fireball/move/fireball_4.png" alt="" />
-    <img src="img/objs/fireball/move/fireball_5.png" alt="" />
+      <img src="img/char/faint/frame-1.png" alt="" />
+      <img src="img/char/faint/frame-2.png" alt="" />
+      <img src="img/char/faint/frame-3.png" alt="" />
+      <img src="img/char/faint/frame-4.png" alt="" />
+      <img src="img/char/faint/frame-5.png" alt="" />
+
+      <img src="img/objs/fireball/move/fireball_1.png" alt="" />
+      <img src="img/objs/fireball/move/fireball_2.png" alt="" />
+      <img src="img/objs/fireball/move/fireball_3.png" alt="" />
+      <img src="img/objs/fireball/move/fireball_4.png" alt="" />
+      <img src="img/objs/fireball/move/fireball_5.png" alt="" />
+    </section>
 
     <div>
       <canvas></canvas>
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="js/index.js"></script>
   </body>
 </html>
