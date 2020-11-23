@@ -12,9 +12,6 @@ export default class Player {
     this.yPosition = game.gameHeight - this.image.height - 50;
     this.alive = true;
     this.xAxisMovement = 0;
-    this.xDistance = 0;
-    this.lives = 3;
-    this.coins = 0;
   }
 
   stand() {
@@ -44,16 +41,6 @@ export default class Player {
     this.xAxisMovement = 0;
   }
 
-  drawPlayerStatistics(ctx, gameWidth, gameHeight) {
-    console.log("Player statistics");
-    ctx.font = "normal 60px Nerko One";
-    ctx.fillStyle = "	#009688";
-    ctx.fillText(`LIVES: ${this.lives}`, 30, 70);
-    ctx.fillText(`COINS: ${this.coins}`, 30, 140);
-    ctx.fillText(`DISTANCE: ${Math.floor(this.xDistance/100)}`, 30, 210);
-    this.xDistance += this.xAxisMovement;
-  }
-
   drawPlayerStanding(ctx, gameWidth, gameHeight) {
     //console.log("Player is standing!");
     Date.now() % 1000 > 500 ? (this.frame = 2) : (this.frame = 1);
@@ -64,7 +51,6 @@ export default class Player {
   }
 
   drawPlayerRunning(ctx, gameWidth, gameHeight) {
-    console.log("Player is running!");
     if (Date.now() - this.date > 80) {
       if (this.frame < 5) {
         this.frame++;
@@ -80,7 +66,6 @@ export default class Player {
   }
 
   drawPlayerJumping(ctx, gameWidth, gameHeight) {
-    console.log("Player is jumping!");
     this.currentJumpHeight += this.jumpSpeed;
     this.jumpSpeed -= 0.7;
     this.jumpSpeed > 0
@@ -122,7 +107,6 @@ export default class Player {
   }
 
   draw(ctx, gameWidth, gameHeight) {
-    this.drawPlayerStatistics(ctx, gameWidth, gameHeight);
     switch (this.activity) {
       case "stand":
         this.drawPlayerStanding(ctx, gameWidth, gameHeight);

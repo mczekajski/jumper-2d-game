@@ -1,5 +1,6 @@
 export default class Fireball {
   constructor(speed, xPosition, yPosition) {
+    this.type = "fireball";
     this.speed = speed;
     this.xPosition = xPosition;
     this.yPosition = yPosition;

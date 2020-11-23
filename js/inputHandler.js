@@ -1,7 +1,8 @@
 export default class InputHandler {
-  constructor(player) {
+  constructor(player, game) {
     window.addEventListener("keydown", (e) => {
       if (e.key === " " || e.key === "Spacebar") {
+        if (game.state === 4) game.restartGame();
         if (player.activity != "jump")
           player.afterJumpActivity = player.activity;
         player.jump();

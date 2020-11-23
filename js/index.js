@@ -30,29 +30,6 @@ function gameLoop(timeStamp) {
   game.update();
   game.draw();
 
-  // game.drawBackground();
-  // game.drawPlayer(player);
-  // game.drawFireBall(fireBall);
-
-  // FIREBALL COLLISION
-  // if (
-  //   player.alive &&
-  //   Math.abs(
-  //     player.xPosition + player.image.width / 2 - fireBall.xPosition - 50
-  //   ) < 100 &&
-  //   player.currentJumpHeight < 250
-  // ) {
-  //   player.alive = false;
-  //   fireBall.speed = 0;
-  //   fireBall.xPosition = -500;
-  //   player.die();
-  //   player.xAxisMovement = 0;
-  // }
-  // if (!player.alive) {
-  //   player.activity = "die";
-  //   player.xAxisMovement = 0;
-  // }
-
   requestAnimationFrame(gameLoop);
 }
 
