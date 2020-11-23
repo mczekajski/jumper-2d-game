@@ -12,6 +12,9 @@ export default class Player {
     this.yPosition = game.gameHeight - this.image.height - 50;
     this.alive = true;
     this.xAxisMovement = 0;
+    this.xDistance = 0;
+    this.lives = 3;
+    this.coins = 0;
   }
 
   stand() {
@@ -39,6 +42,16 @@ export default class Player {
     this.frame = 1;
     this.activity = "die";
     this.xAxisMovement = 0;
+  }
+
+  drawPlayerStatistics(ctx, gameWidth, gameHeight) {
+    console.log("Player statistics");
+    ctx.font = "normal 60px Nerko One";
+    ctx.fillStyle = "	#009688";
+    ctx.fillText(`LIVES: ${this.lives}`, 30, 70);
+    ctx.fillText(`COINS: ${this.coins}`, 30, 140);
+    ctx.fillText(`DISTANCE: ${Math.floor(this.xDistance/100)}`, 30, 210);
+    this.xDistance += this.xAxisMovement;
   }
 
   drawPlayerStanding(ctx, gameWidth, gameHeight) {
@@ -109,6 +122,7 @@ export default class Player {
   }
 
   draw(ctx, gameWidth, gameHeight) {
+    this.drawPlayerStatistics(ctx, gameWidth, gameHeight);
     switch (this.activity) {
       case "stand":
         this.drawPlayerStanding(ctx, gameWidth, gameHeight);
