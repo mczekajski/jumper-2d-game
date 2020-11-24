@@ -25,7 +25,7 @@ export default class Background {
     );
     ctx.drawImage(
       this.background,
-      this.backgroundPosition + gameWidth - 2,
+      this.backgroundPosition + gameWidth - 1,
       0,
       gameWidth,
       gameHeight
@@ -44,7 +44,7 @@ export default class Background {
 
     ctx.drawImage(
       this.ground,
-      this.groundPosition + this.ground.width - 2,
+      this.groundPosition + this.ground.width - 1,
       gameHeight - this.ground.height,
       gameWidth,
       this.ground.height

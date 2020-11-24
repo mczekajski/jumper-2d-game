@@ -3,9 +3,10 @@ export default class InputHandler {
     window.addEventListener("keydown", (e) => {
       if (e.key === " " || e.key === "Spacebar") {
         if (game.state === 4) game.restartGame();
-        if (player.activity != "jump")
+        else if (player.activity != "jump") {
           player.afterJumpActivity = player.activity;
-        player.jump();
+          player.jump();
+        }
       }
       if (e.key === "ArrowRight" && player.alive) player.run();
       if (e.key === "ArrowRight" && player.activity === "jump")
