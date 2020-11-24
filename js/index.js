@@ -1,5 +1,4 @@
 import Game from "./game.js";
-import Player from "./player.js";
 
 // GLOBAL:
 const canvas = document.querySelector("canvas");
@@ -15,9 +14,7 @@ const div = document.querySelector("div");
 div.style.height = 100 + "vh";
 div.style.width = 100 + "vw";
 
-// CREATE GAME OBJECTS AND CALL FUNCTIONS:
 let game = new Game(ctx, GAME_WIDTH, GAME_HEIGHT);
-//let fireBall = new FireBall(10, canvas.width + 500, canvas.height * 0.65);
 
 let lastTime = 0;
 
@@ -27,8 +24,8 @@ function gameLoop(timeStamp) {
 
   ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
-  game.update();
-  game.draw();
+  game.update(deltaTime);
+  game.draw(deltaTime);
 
   requestAnimationFrame(gameLoop);
 }

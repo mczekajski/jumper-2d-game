@@ -19,7 +19,7 @@ export default class Game {
     this.height = gameHeight;
     this.ctx = ctx;
 
-    this.lives = 3;
+    this.lives = 1;
     this.coins = 0;
     this.xDistance = 0;
     this.lastDiedXDistance = 0;
@@ -41,9 +41,12 @@ export default class Game {
     this.maxFireballs = 1;
     this.fireballs = 0;
     this.gameObjects = [];
-    this.player = new Player(this);
-    this.background = new Background(this);
-    new InputHandler(this.player, this);
+    this.background.backgroundPosition = 0;
+    this.background.groundPosition = 0;
+    this.player.src = "img/char/standing/frame-1.png";
+    this.player.activity = "stand";
+    this.player.afterJumpActivity = "stand";
+    this.player.alive = true;
     this.state = GAMESTATE.RUNNING;
   }
 
@@ -80,7 +83,7 @@ export default class Game {
     this.xDistance += this.player.xAxisMovement;
   }
 
-  draw() {
+  draw(deltaTime) {
     this.background.draw(this.ctx, this.width, this.height);
     this.player.draw(this.ctx, this.width, this.height);
     this.gameObjects.forEach((obj) =>
