@@ -20,7 +20,7 @@ export default class Game {
     this.height = gameHeight;
     this.ctx = ctx;
 
-    this.lives = 1;
+    this.lives = 3;
     this.coins = 0;
     this.xDistance = 0;
     this.lastDiedXDistance = 0;
