@@ -22,10 +22,10 @@ export default function detectCollisions(player, game, gameObjects) {
           game.lives -= 1;
           player.xAxisMovement = 0;
         }
-        // if (!player.alive) {
-        //   player.setActivity("die")
-        //   player.xAxisMovement = 0;
-        // }
+        if (!player.alive) {
+          player.setActivity("die")
+          player.xAxisMovement = 0;
+        }
         break;
     }
   });

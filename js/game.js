@@ -1,7 +1,7 @@
 import Player from "./Player.js";
 import Fireball from "./Fireball.js";
 import InputHandler from "./InputHandler.js";
-import Background from "./background.js";
+import Background from "./Background.js";
 import detectCollisions from "./detectCollisions.js";
 
 export default class Game {
