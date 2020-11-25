@@ -12,18 +12,20 @@ export default function detectCollisions(player, game, gameObjects) {
           ) < 100 &&
           player.currentJumpHeight < 200
         ) {
-          game.state = 3;
+          game.state = game.GAMESTATE.LOSINGLIFE;
           player.alive = false;
           gameObject.speed = 0;
           gameObject.xPosition = -500;
-          player.die();
+          player.frame = 1;
+          if (player.activity !== "jump") player.setActivity("die");
+          else (player.afterJumpActivity = "die");
           game.lives -= 1;
           player.xAxisMovement = 0;
         }
-        if (!player.alive) {
-          player.activity = "die";
-          player.xAxisMovement = 0;
-        }
+        // if (!player.alive) {
+        //   player.setActivity("die")
+        //   player.xAxisMovement = 0;
+        // }
         break;
     }
   });

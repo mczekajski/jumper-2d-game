@@ -1,25 +1,26 @@
-import Player from "./player.js";
-import Fireball from "./fireball.js";
-import InputHandler from "./inputHandler.js";
+import Player from "./Player.js";
+import Fireball from "./Fireball.js";
+import InputHandler from "./InputHandler.js";
 import Background from "./background.js";
-import detectCollisions from "./collisionDetection.js";
-
-const GAMESTATE = {
-  MENU: 0,
-  RUNNING: 1,
-  PAUSED: 2,
-  LOSINGLIFE: 3,
-  GAMEOVER: 4,
-};
+import detectCollisions from "./detectCollisions.js";
 
 export default class Game {
   constructor(ctx, gameWidth, gameHeight) {
-    this.state = GAMESTATE.RUNNING;
+
+    this.GAMESTATE = {
+      MENU: 0,
+      RUNNING: 1,
+      PAUSED: 2,
+      LOSINGLIFE: 3,
+      GAMEOVER: 4,
+    };
+
+    this.state = this.GAMESTATE.RUNNING;
     this.width = gameWidth;
     this.height = gameHeight;
     this.ctx = ctx;
 
-    this.lives = 3;
+    this.lives = 1;
     this.coins = 0;
     this.xDistance = 0;
     this.lastDiedXDistance = 0;
@@ -43,11 +44,13 @@ export default class Game {
     this.gameObjects = [];
     this.background.backgroundPosition = 0;
     this.background.groundPosition = 0;
+    this.player.frame = 1;
+    this.player.currentJumpHeight = 0;
     this.player.src = "img/char/standing/frame-1.png";
     this.player.activity = "stand";
     this.player.afterJumpActivity = "stand";
     this.player.alive = true;
-    this.state = GAMESTATE.RUNNING;
+    this.state = this.GAMESTATE.RUNNING;
   }
 
   update() {
@@ -58,8 +61,8 @@ export default class Game {
       );
       this.fireballs++;
     }
-    if (this.state === GAMESTATE.LOSINGLIFE) {
-      if (this.lives === 0) this.state = GAMESTATE.GAMEOVER;
+    if (this.state === this.GAMESTATE.LOSINGLIFE) {
+      if (this.lives === 0) this.state = this.GAMESTATE.GAMEOVER;
       else {
         this.lastDiedXDistance = this.xDistance;
         setTimeout(() => {
@@ -68,7 +71,7 @@ export default class Game {
           this.fireballs = 0;
           this.gameObjects = [];
         }, 2000);
-        this.state = GAMESTATE.RUNNING;
+        this.state = this.GAMESTATE.RUNNING;
       }
     }
   }
@@ -91,16 +94,13 @@ export default class Game {
     );
     this.drawGameStatistics(this.ctx);
 
-    if (this.state === GAMESTATE.RUNNING && !this.player.alive) {
+    if (this.state === this.GAMESTATE.RUNNING && !this.player.alive) {
       this.ctx.font = 'normal 200px Nerko One';
       this.ctx.fillStyle = '#009688';
       this.ctx.textAlign = 'center'
       this.ctx.fillText('OOOPS!', this.width/2, this.height/2-100);
     }
-    if (this.state === GAMESTATE.GAMEOVER) {
-      this.ctx.rect(0, 0, this.gameWidth, this.gameHeight);
-      this.ctx.fillStyle = "rgba(0,0,0,0.5)";
-      this.ctx.fill();
+    if (this.state === this.GAMESTATE.GAMEOVER) {
       this.ctx.font = 'normal 200px Nerko One';
       this.ctx.fillStyle = '#009688';
       this.ctx.textAlign = 'center'

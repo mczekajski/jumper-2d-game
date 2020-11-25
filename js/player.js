@@ -14,31 +14,33 @@ export default class Player {
     this.xAxisMovement = 0;
   }
 
-  stand() {
-    if (this.activity != "jump") {
-      this.activity = "stand";
-      this.xAxisMovement = 0;
+  setActivity(activity) {
+    switch (activity) {
+      case "stand":
+        if (this.activity != "jump") {
+          this.activity = "stand";
+          this.xAxisMovement = 0;
+        }
+        break;
+      case "run":
+        if (this.activity != "jump") {
+          this.activity = "run";
+          this.xAxisMovement = 10;
+        }
+        break;
+      case "jump":
+        this.activity = "jump";
+        if (this.afterJumpActivity === "run") this.xAxisMovement = 10
+        if (this.afterJumpActivity === "stand") this.xAxisMovement = 0
+        break;
+      case "die":
+        this.activity = "die";
+        break;
+      default:
+        if (this.activity != "jump") {
+          this.activity = "stand";
+        }
     }
-  }
-
-  run() {
-    if (this.activity != "jump") {
-      this.activity = "run";
-      this.xAxisMovement = 10;
-    }
-  }
-
-  jump() {
-    this.activity = "jump";
-    this.afterJumpActivity === "run"
-      ? (this.xAxisMovement = 10)
-      : (this.xAxisMovement = 0);
-  }
-
-  die() {
-    this.frame = 1;
-    this.activity = "die";
-    this.xAxisMovement = 0;
   }
 
   drawPlayerStanding(ctx, gameWidth, gameHeight) {
@@ -72,16 +74,20 @@ export default class Player {
       ? (this.image.src = "img/char/jump/jump-up.png")
       : (this.image.src = "img/char/jump/jump-fall.png");
 
+    if (this.afterJumpActivity === "die") {
+      this.image.src = `img/char/faint/frame-1.png`;
+      this.jumpSpeed > 0 ? this.jumpSpeed = 0 : this.jumpSpeed = this.jumpSpeed;
+    }
+
     if (this.currentJumpHeight + this.jumpSpeed <= 0) {
       this.jumpSpeed = 21;
       this.currentJumpHeight = 0;
       this.activity = this.afterJumpActivity;
       if (this.afterJumpActivity === "run") {
-        this.run();
+        this.setActivity("run");
         this.xAxisMovement = 10;
-      } else {
-        this.xAxisMovement = 0;
       }
+      else this.xAxisMovement = 0;
     }
     this.date = Date.now();
     this.xPosition = gameWidth / 2 - this.image.width / 2;
