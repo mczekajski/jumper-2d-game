@@ -34,6 +34,8 @@ export default class Player {
         if (this.afterJumpActivity === "stand") this.xAxisMovement = 0
         break;
       case "die":
+        this.jumpSpeed = 21;
+        this.currentJumpHeight = 0;
         this.activity = "die";
         break;
       default:
@@ -44,7 +46,6 @@ export default class Player {
   }
 
   drawPlayerStanding(ctx, gameWidth, gameHeight) {
-    //console.log("Player is standing!");
     Date.now() % 1000 > 500 ? (this.frame = 2) : (this.frame = 1);
     this.image.src = `img/char/standing/frame-${this.frame}.png`;
     this.xPosition = gameWidth / 2 - this.image.width / 2;
