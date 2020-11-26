@@ -1,7 +1,8 @@
 export default class Player {
   constructor(game) {
+    this.groundLevel = game.groundLevel;
     this.activity = "stand";
-    this.initialJumpSpeed = 25;
+    this.initialJumpSpeed = 30;
     this.jumpSpeed = this.initialJumpSpeed;
     this.image = new Image();
     this.image.src = "img/char/standing/frame-1.png";
@@ -9,8 +10,8 @@ export default class Player {
     this.afterJumpActivity = "stand";
     this.frame = 1;
     this.date = Date.now();
-    this.xPosition = game.gameWidth / 2 - this.image.width / 2;
-    this.yPosition = game.gameHeight - this.image.height - 50;
+    this.xPosition = game.width / 2 - this.image.width / 2;
+    this.yPosition = game.height - this.image.height - game.groundLevel;
     this.alive = true;
     this.xAxisMovement = 0;
   }
@@ -46,15 +47,15 @@ export default class Player {
     }
   }
 
-  drawPlayerStanding(ctx, gameWidth, gameHeight) {
+  drawPlayerStanding(game) {
     Date.now() % 1000 > 500 ? (this.frame = 2) : (this.frame = 1);
     this.image.src = `img/char/standing/frame-${this.frame}.png`;
-    this.xPosition = gameWidth / 2 - this.image.width / 2;
-    this.yPosition = gameHeight - this.image.height - gameHeight * 0.17;
-    ctx.drawImage(this.image, this.xPosition, this.yPosition);
+    this.xPosition = game.width / 2 - this.image.width / 2;
+    this.yPosition = game.height - this.image.height - game.groundLevel;
+    game.ctx.drawImage(this.image, this.xPosition, this.yPosition);
   }
 
-  drawPlayerRunning(ctx, gameWidth, gameHeight) {
+  drawPlayerRunning(game) {
     if (Date.now() - this.date > 80) {
       if (this.frame < 5) {
         this.frame++;
@@ -64,14 +65,14 @@ export default class Player {
       this.date = Date.now();
     }
     this.image.src = `img/char/run/frame-${this.frame}.png`;
-    this.xPosition = gameWidth / 2 - this.image.width / 2;
-    this.yPosition = gameHeight - this.image.height - gameHeight * 0.17;
-    ctx.drawImage(this.image, this.xPosition, this.yPosition);
+    this.xPosition = game.width / 2 - this.image.width / 2;
+    this.yPosition = game.height - this.image.height - game.groundLevel;
+    game.ctx.drawImage(this.image, this.xPosition, this.yPosition);
   }
 
-  drawPlayerJumping(ctx, gameWidth, gameHeight) {
+  drawPlayerJumping(game) {
     this.currentJumpHeight += this.jumpSpeed;
-    this.jumpSpeed -= 0.8 ;
+    this.jumpSpeed -= 1.2;
     this.jumpSpeed > 0
       ? (this.image.src = "img/char/jump/jump-up.png")
       : (this.image.src = "img/char/jump/jump-fall.png");
@@ -92,16 +93,16 @@ export default class Player {
       else this.xAxisMovement = 0;
     }
     this.date = Date.now();
-    this.xPosition = gameWidth / 2 - this.image.width / 2;
+    this.xPosition = game.width / 2 - this.image.width / 2;
     this.yPosition =
-      gameHeight -
+      game.height -
       this.image.height -
-      gameHeight * 0.17 -
+      game.groundLevel -
       this.currentJumpHeight;
-    ctx.drawImage(this.image, this.xPosition, this.yPosition);
+    game.ctx.drawImage(this.image, this.xPosition, this.yPosition);
   }
 
-  drawPlayerDying(ctx, gameWidth, gameHeight) {
+  drawPlayerDying(game) {
     if (Date.now() - this.date > 100) {
       if (this.frame < 5) {
         this.frame++;
@@ -109,24 +110,24 @@ export default class Player {
       this.date = Date.now();
     }
     this.image.src = `img/char/faint/frame-${this.frame}.png`;
-    this.xPosition = gameWidth / 2 - this.image.width / 2;
-    this.yPosition = gameHeight - this.image.height - gameHeight * 0.17;
-    ctx.drawImage(this.image, this.xPosition, this.yPosition);
+    this.xPosition = game.width / 2 - this.image.width / 2;
+    this.yPosition = game.height - this.image.height - game.groundLevel;
+    game.ctx.drawImage(this.image, this.xPosition, this.yPosition);
   }
 
-  draw(ctx, gameWidth, gameHeight) {
+  draw(game) {
     switch (this.activity) {
       case "stand":
-        this.drawPlayerStanding(ctx, gameWidth, gameHeight);
+        this.drawPlayerStanding(game);
         break;
       case "run":
-        this.drawPlayerRunning(ctx, gameWidth, gameHeight);
+        this.drawPlayerRunning(game);
         break;
       case "jump":
-        this.drawPlayerJumping(ctx, gameWidth, gameHeight);
+        this.drawPlayerJumping(game);
         break;
       case "die":
-        this.drawPlayerDying(ctx, gameWidth, gameHeight);
+        this.drawPlayerDying(game);
         break;
     }
   }

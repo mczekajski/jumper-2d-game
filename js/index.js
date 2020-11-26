@@ -24,8 +24,8 @@ function gameLoop(timeStamp) {
 
   ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
-  game.update(deltaTime);
-  game.draw(deltaTime);
+  game.update();
+  game.draw();
 
   requestAnimationFrame(gameLoop);
 }

@@ -3,6 +3,7 @@ import Fireball from "./Fireball.js";
 import InputHandler from "./InputHandler.js";
 import Background from "./Background.js";
 import detectCollisions from "./detectCollisions.js";
+import drawGameStatisticsAndMessages from "./drawGameStatisticsAndMessages.js";
 
 export default class Game {
   constructor(ctx, gameWidth, gameHeight) {
@@ -19,10 +20,12 @@ export default class Game {
     this.width = gameWidth;
     this.height = gameHeight;
     this.ctx = ctx;
+    this.groundLevel = 185;
 
     this.lives = 3;
     this.coins = 0;
     this.xDistance = 0;
+
     this.lastDiedXDistance = 0;
     this.maxFireballs = 1;
     this.fireballs = 0;
@@ -46,7 +49,7 @@ export default class Game {
     this.background.groundPosition = 0;
     this.player.frame = 1;
     this.player.currentJumpHeight = 0;
-    this.player.jumpSpeed = 26;
+    this.player.jumpSpeed = this.player.initialJumpSpeed;
     this.player.src = "img/char/standing/frame-1.png";
     this.player.activity = "stand";
     this.player.afterJumpActivity = "stand";
@@ -55,13 +58,22 @@ export default class Game {
   }
 
   update() {
+    this.gameObjects.forEach((obj) =>
+      obj.update(this)
+    );
+
     detectCollisions(this.player, this, this.gameObjects);
+
+    // Update distance
+    this.xDistance += this.player.xAxisMovement;
+
     if (this.xDistance > 2000 + this.lastDiedXDistance && this.fireballs < this.maxFireballs) {
       this.gameObjects.push(
-        new Fireball(10, this.width + 500, this.height * 0.6)
+        new Fireball(10, this)
       );
       this.fireballs++;
     }
+
     if (this.state === this.GAMESTATE.LOSINGLIFE) {
       if (this.lives === 0) this.state = this.GAMESTATE.GAMEOVER;
       else {
@@ -77,37 +89,12 @@ export default class Game {
     }
   }
 
-  drawGameStatistics(ctx) {
-    ctx.font = "normal 60px Nerko One";
-    ctx.fillStyle = "	#009688";
-    ctx.textAlign = 'left'
-    ctx.fillText(`LIVES: ${this.lives}`, 30, 70);
-    ctx.fillText(`COINS: ${this.coins}`, 30, 140);
-    ctx.fillText(`DISTANCE: ${Math.floor(this.xDistance / 100)}`, 30, 210);
-    this.xDistance += this.player.xAxisMovement;
-  }
-
-  draw(deltaTime) {
-    this.background.draw(this.ctx, this.width, this.height);
-    this.player.draw(this.ctx, this.width, this.height);
+  draw() {
+    this.background.draw(this);
+    this.player.draw(this);
     this.gameObjects.forEach((obj) =>
-      obj.draw(this.ctx, this.width, this.player.xAxisMovement)
+      obj.draw(this)
     );
-    this.drawGameStatistics(this.ctx);
-
-    if (this.state === this.GAMESTATE.RUNNING && !this.player.alive) {
-      this.ctx.font = 'normal 200px Nerko One';
-      this.ctx.fillStyle = '#009688';
-      this.ctx.textAlign = 'center'
-      this.ctx.fillText('OOOPS!', this.width/2, this.height/2-100);
-    }
-    if (this.state === this.GAMESTATE.GAMEOVER) {
-      this.ctx.font = 'normal 200px Nerko One';
-      this.ctx.fillStyle = '#009688';
-      this.ctx.textAlign = 'center'
-      this.ctx.fillText('GAME OVER!', this.width/2, this.height/2-100);
-      this.ctx.font = 'normal 60px Nerko One';
-      if(Date.now() % 2000 > 400) this.ctx.fillText('Press SPACEBAR to play again', this.width/2, this.height/2);
-    }
+    drawGameStatisticsAndMessages(this)
   }
 }

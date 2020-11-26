@@ -13,43 +13,43 @@ export default class Background {
     this.cloud.src = "img/bg/cloud.png";
   }
 
-  draw(ctx, gameWidth, gameHeight) {
+  draw(game) {
     this.backgroundPosition -= this.player.xAxisMovement / 3;
-    if (this.backgroundPosition <= -gameWidth) this.backgroundPosition = 0;
-    ctx.drawImage(
+    if (this.backgroundPosition <= -game.width) this.backgroundPosition = 0;
+    game.ctx.drawImage(
       this.background,
       this.backgroundPosition,
       0,
-      gameWidth,
-      gameHeight
+      game.width,
+      game.height
     );
-    ctx.drawImage(
+    game.ctx.drawImage(
       this.background,
-      this.backgroundPosition + gameWidth - 1,
+      this.backgroundPosition + game.width - 1,
       0,
-      gameWidth,
-      gameHeight
+      game.width,
+      game.height
     );
 
     this.groundPosition -= this.player.xAxisMovement;
-    if (this.groundPosition <= -gameWidth) this.groundPosition = 0;
+    if (this.groundPosition <= -game.width) this.groundPosition = 0;
 
-    ctx.drawImage(
+    game.ctx.drawImage(
       this.ground,
       this.groundPosition,
-      gameHeight - this.ground.height,
-      gameWidth,
+      game.height - this.ground.height,
+      game.width,
       this.ground.height
     );
 
-    ctx.drawImage(
+    game.ctx.drawImage(
       this.ground,
       this.groundPosition + this.ground.width - 1,
-      gameHeight - this.ground.height,
-      gameWidth,
+      game.height - this.ground.height,
+      game.width,
       this.ground.height
     );
 
-    ctx.drawImage(this.cloud, 0, 0);
+    game.ctx.drawImage(this.cloud, 0, 0);
   }
 }
