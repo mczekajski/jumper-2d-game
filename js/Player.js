@@ -1,7 +1,8 @@
 export default class Player {
   constructor(game) {
     this.activity = "stand";
-    this.jumpSpeed = 21;
+    this.initialJumpSpeed = 25;
+    this.jumpSpeed = this.initialJumpSpeed;
     this.image = new Image();
     this.image.src = "img/char/standing/frame-1.png";
     this.currentJumpHeight = 0;
@@ -34,7 +35,7 @@ export default class Player {
         if (this.afterJumpActivity === "stand") this.xAxisMovement = 0
         break;
       case "die":
-        this.jumpSpeed = 21;
+        this.jumpSpeed = this.initialJumpSpeed;
         this.currentJumpHeight = 0;
         this.activity = "die";
         break;
@@ -70,7 +71,7 @@ export default class Player {
 
   drawPlayerJumping(ctx, gameWidth, gameHeight) {
     this.currentJumpHeight += this.jumpSpeed;
-    this.jumpSpeed -= 0.7;
+    this.jumpSpeed -= 0.8 ;
     this.jumpSpeed > 0
       ? (this.image.src = "img/char/jump/jump-up.png")
       : (this.image.src = "img/char/jump/jump-fall.png");
@@ -81,7 +82,7 @@ export default class Player {
     }
 
     if (this.currentJumpHeight + this.jumpSpeed <= 0) {
-      this.jumpSpeed = 21;
+      this.jumpSpeed = this.initialJumpSpeed;
       this.currentJumpHeight = 0;
       this.activity = this.afterJumpActivity;
       if (this.afterJumpActivity === "run") {

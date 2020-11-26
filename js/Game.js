@@ -46,7 +46,7 @@ export default class Game {
     this.background.groundPosition = 0;
     this.player.frame = 1;
     this.player.currentJumpHeight = 0;
-    this.player.jumpSpeed = 21;
+    this.player.jumpSpeed = 26;
     this.player.src = "img/char/standing/frame-1.png";
     this.player.activity = "stand";
     this.player.afterJumpActivity = "stand";
